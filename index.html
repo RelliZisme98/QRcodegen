@@ -120,14 +120,19 @@
             </div>
             <div class="form-row">
                 <label>Nội dung:</label>
-                <input type="text" name="info">
+                <input type="text" name="info" placeholder="Không bắt buộc">
             </div>
         </div>
         <button type="submit">Generate</button>
+        <button type="button" id="qr-no-amount" style="margin-left:18px;background:#e5e7eb;color:#093d62;">QR không số tiền</button>
     </form>
     <div class="error" id="error-message"></div>
     <div class="qr-img" id="qr-img">
         <img id="qr-code" src="" alt="QR Code">
+    </div>
+    <div class="qr-img" id="qr-img-no-amount" style="display:none;">
+        <img id="qr-code-no-amount" src="https://img.vietqr.io/image/ICB-0342751185-qr_only.png?accountName=LE%20CHINH%20DAI" alt="QR Không số tiền">
+        <div style="margin-top:8px;font-size:0.98rem;color:#666;">QR không có số tiền</div>
     </div>
 </div>
 <script>
@@ -139,21 +144,35 @@
         const errorDiv = document.getElementById('error-message');
         const qrImgDiv = document.getElementById('qr-img');
         const qrCodeImg = document.getElementById('qr-code');
+        const qrImgNoAmountDiv = document.getElementById('qr-img-no-amount');
 
         errorDiv.style.display = 'none';
         errorDiv.innerHTML = '';
         qrImgDiv.style.display = 'none';
         qrCodeImg.src = '';
+        qrImgNoAmountDiv.style.display = 'none';
 
-        if (!amount || !info) {
+        if (!amount) {
             errorDiv.style.display = 'block';
-            errorDiv.innerHTML = 'Vui lòng nhập đầy đủ Số tiền và Nội dung.';
+            errorDiv.innerHTML = 'Vui lòng nhập Số tiền.';
             return;
         }
 
-        const qrUrl = `https://img.vietqr.io/image/ICB-0342751185-qr_only.png?amount=${amount}&addInfo=${encodeURIComponent(info)}&accountName=LE%20CHINH%20DAI`;
+        let qrUrl = `https://img.vietqr.io/image/ICB-0342751185-qr_only.png?amount=${amount}`;
+        if (info) {
+            qrUrl += `&addInfo=${encodeURIComponent(info)}`;
+        }
+        qrUrl += `&accountName=LE%20CHINH%20DAI`;
+
         qrCodeImg.src = qrUrl;
         qrImgDiv.style.display = 'block';
+    });
+
+    document.getElementById('qr-no-amount').addEventListener('click', function() {
+        // Ẩn các ảnh QR khác và lỗi
+        document.getElementById('error-message').style.display = 'none';
+        document.getElementById('qr-img').style.display = 'none';
+        document.getElementById('qr-img-no-amount').style.display = 'block';
     });
 </script>
 </body>
