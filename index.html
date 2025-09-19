@@ -124,7 +124,7 @@
             </div>
         </div>
         <button type="submit">Generate</button>
-        <button type="button" id="qr-no-amount" style="margin-left:18px;background:#e5e7eb;color:#093d62;">QR không số tiền</button>
+        <button type="button" id="qr-no-amount" style="margin-left:18px;background:#e5e7eb;color:#093d62;">Hiện QR không số tiền</button>
     </form>
     <div class="error" id="error-message"></div>
     <div class="qr-img" id="qr-img">
@@ -168,11 +168,21 @@
         qrImgDiv.style.display = 'block';
     });
 
-    document.getElementById('qr-no-amount').addEventListener('click', function() {
-        // Ẩn các ảnh QR khác và lỗi
+    const qrNoAmountBtn = document.getElementById('qr-no-amount');
+    const qrImgNoAmountDiv = document.getElementById('qr-img-no-amount');
+
+    qrNoAmountBtn.addEventListener('click', function() {
+        // Ẩn lỗi và QR có số tiền
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('qr-img').style.display = 'none';
-        document.getElementById('qr-img-no-amount').style.display = 'block';
+        // Toggle QR không số tiền
+        if (qrImgNoAmountDiv.style.display === 'block') {
+            qrImgNoAmountDiv.style.display = 'none';
+            qrNoAmountBtn.textContent = 'Hiện QR không số tiền';
+        } else {
+            qrImgNoAmountDiv.style.display = 'block';
+            qrNoAmountBtn.textContent = 'Ẩn QR không số tiền';
+        }
     });
 </script>
 </body>
