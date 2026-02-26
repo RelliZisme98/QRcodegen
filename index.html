@@ -365,6 +365,86 @@
             color: var(--muted);
         }
 
+        /* History */
+        .history-section {
+            margin-top: 18px;
+            display: none;
+        }
+
+        .history-section.visible {
+            display: block;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .history-header span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .history-clear {
+            background: none;
+            border: none;
+            color: #475569;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+
+        .history-clear:hover {
+            color: #fca5a5;
+        }
+
+        .history-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .history-chip {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1px;
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 11px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .history-chip:hover {
+            border-color: var(--accent);
+            background: #162840;
+        }
+
+        .history-chip .hc-amount {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .history-chip .hc-desc {
+            font-size: 0.72rem;
+            color: var(--muted);
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         @media (max-width: 400px) {
             .bank-tab {
                 min-width: 60px;
@@ -448,6 +528,15 @@
             </div>
             <button class="btn-generate" id="btnGenerate">Tạo mã QR</button>
             <div class="error-msg" id="errorMsg">Vui lòng nhập số tiền (tối thiểu 1.000đ).</div>
+
+            <!-- History -->
+            <div class="history-section" id="historySection">
+                <div class="history-header">
+                    <span>Dùng lại gần đây</span>
+                    <button class="history-clear" id="historyClear">Xoá tất cả</button>
+                </div>
+                <div class="history-chips" id="historyChips"></div>
+            </div>
         </div>
 
         <!-- Card: no amount -->
@@ -539,6 +628,59 @@
             hideQR();
         });
 
+        // ── History (localStorage) ──────────────────────────────────────
+        const HISTORY_KEY = 'qr_history';
+        const MAX_HISTORY = 8;
+
+        function loadHistory() {
+            try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+            catch { return []; }
+        }
+
+        function saveToHistory(amount, info) {
+            let history = loadHistory();
+            // Remove duplicate
+            history = history.filter(h => !(h.amount == amount && h.info === info));
+            // Add to front
+            history.unshift({ amount, info });
+            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const history = loadHistory();
+            const section = document.getElementById('historySection');
+            const chips = document.getElementById('historyChips');
+            if (history.length === 0) {
+                section.classList.remove('visible');
+                return;
+            }
+            section.classList.add('visible');
+            chips.innerHTML = history.map((h, i) => `
+                <div class="history-chip" data-index="${i}">
+                    <span class="hc-amount">${fmt(h.amount)}</span>
+                    ${h.info ? `<span class="hc-desc">${h.info}</span>` : ''}
+                </div>`).join('');
+        }
+
+        document.getElementById('historyChips').addEventListener('click', function (e) {
+            const chip = e.target.closest('.history-chip');
+            if (!chip) return;
+            const h = loadHistory()[+chip.dataset.index];
+            if (!h) return;
+            document.getElementById('amountInput').value = h.amount;
+            document.getElementById('infoInput').value = h.info || '';
+            // Auto-generate
+            document.getElementById('btnGenerate').click();
+        });
+
+        document.getElementById('historyClear').addEventListener('click', function () {
+            localStorage.removeItem(HISTORY_KEY);
+            renderHistory();
+        });
+        // ────────────────────────────────────────────────────────────────
+
         // Generate with amount
         document.getElementById('btnGenerate').addEventListener('click', function () {
             const amount = document.getElementById('amountInput').value.trim();
@@ -551,6 +693,8 @@
                 errorMsg.classList.add('visible');
                 return;
             }
+
+            saveToHistory(amount, info);
 
             const b = BANKS[currentBank];
             let url = `https://img.vietqr.io/image/${currentBank}-${b.account}-qr_only.png?amount=${amount}`;
@@ -594,6 +738,7 @@
 
         // Init
         updateBankInfo();
+        renderHistory();
     </script>
 </body>
 
