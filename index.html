@@ -1,189 +1,600 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
-    <title>Generate QR chuyển tiền</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Thanh Toán - Lê Chính Đại</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
-            background: linear-gradient(120deg, #e0e7ff 0%, #f6f8fa 100%);
-            color: #093d62;
+            padding: 0;
         }
-        .container {
-            max-width: 1000px;
-            margin: 48px auto 32px auto;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 6px 32px rgba(30,64,175,0.10), 0 1.5px 6px rgba(30,64,175,0.06);
-            padding: 40px 44px 32px 44px;
+
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #273348;
+            --border: #334155;
+            --accent: #38bdf8;
+            --accent2: #0ea5e9;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --success: #22d3ee;
+            --radius: 16px;
         }
-        h2 {
-            text-align: center;
-            color: #093d62;
-            margin-bottom: 28px;
-            font-size: 2.1rem;
-            letter-spacing: 1px;
-        }
-        form {
-            margin-bottom: 28px;
-            border-radius: 10px;
-            padding: 24px 20px 18px 20px;
-            box-shadow: 0 1px 4px rgba(30,64,175,0.04);
-        }
-        .form-row {
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
-            flex-wrap: wrap;
-            gap: 18px 32px;
-            margin-bottom: 12px;
-            align-items: center;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 32px 12px 48px;
         }
-        label {
-            font-weight: 500;
-            min-width: 120px;
-            margin-bottom: 0;
-            color: #093d62;
+
+        .app {
+            width: 100%;
+            max-width: 560px;
         }
-        input[type="number"], input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid #bfc7d1;
-            border-radius: 6px;
-            margin-left: 8px;
-            min-width: 120px;
-            font-size: 15px;
-            background: #f8fafc;
-            transition: border 0.2s;
-            color: #093d62;
-        }
-        input[type="number"]:focus, input[type="text"]:focus {
-            border: 1.5px solid #093d62;
-            outline: none;
-        }
-        button[type="submit"] {
-            background: linear-gradient(90deg, #093d62 60%, #14507a 100%);
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 28px;
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 2px 8px rgba(9,61,98,0.08);
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        button[type="submit"]:hover {
-            background: linear-gradient(90deg, #14507a 60%, #093d62 100%);
-            box-shadow: 0 4px 16px rgba(9,61,98,0.13);
-        }
-        .error {
-            color: #d93025;
-            background: #fff0f0;
-            border: 1.5px solid #f8d7da;
-            border-radius: 6px;
-            padding: 12px 18px;
-            margin: 18px 0 0 0;
-            font-size: 1.08rem;
-            display: none;
-        }
-        .qr-img {
-            margin: 28px 0 0 0;
+
+        /* Header */
+        .header {
             text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin-top: 6px;
+        }
+
+        /* Bank selector */
+        .bank-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .bank-tab {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 8px 9px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bank-tab:hover {
+            border-color: var(--accent);
+            background: var(--surface2);
+            transform: translateY(-2px);
+        }
+
+        .bank-tab.active {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, #0c1d2e, #162840);
+            box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(56, 189, 248, 0.15);
+        }
+
+        .bank-tab .bank-logo {
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .bank-tab .bank-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0;
+        }
+
+        .bank-tab.active .bank-name {
+            color: var(--accent);
+        }
+
+        /* Mode toggle */
+        .mode-toggle {
+            display: flex;
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent2);
+            color: #fff;
+            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.35);
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 7px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap .prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px 12px 36px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text);
+            transition: border-color 0.2s;
+        }
+
+        .form-group input.no-prefix {
+            padding-left: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group input::placeholder {
+            color: #475569;
+        }
+
+        /* Generate button */
+        .btn-generate {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #0ea5e9, #6366f1);
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(14, 165, 233, 0.45);
+        }
+
+        .btn-generate:active {
+            transform: translateY(0);
+        }
+
+        /* QR result */
+        .qr-result {
+            display: none;
+            text-align: center;
+        }
+
+        .qr-result.visible {
+            display: block;
+        }
+
+        .qr-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px 20px;
+        }
+
+        .qr-bank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 5px 14px 5px 10px;
+            margin-bottom: 18px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        .qr-frame {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            display: inline-block;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        .qr-frame img {
+            display: block;
+            width: 220px;
+            height: 220px;
+            border-radius: 6px;
+        }
+
+        .qr-info {
+            margin-top: 16px;
+        }
+
+        .qr-info .amount-label {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        .qr-info .desc-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .no-amount-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 12px;
+        }
+
+        /* No-amount tab content */
+        .no-amount-info {
+            text-align: center;
+            padding: 6px 0 4px;
+        }
+
+        .no-amount-info p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        /* Error */
+        .error-msg {
+            background: #3b1212;
+            border: 1px solid #7f1d1d;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fca5a5;
+            font-size: 0.88rem;
+            margin-top: 12px;
             display: none;
         }
-        .qr-img img {
-            border: 2.5px solid #e3e3e3;
-            border-radius: 12px;
-            background: #fff;
-            padding: 10px;
-            max-width: 240px;
-            box-shadow: 0 2px 12px rgba(30,64,175,0.08);
+
+        .error-msg.visible {
+            display: block;
         }
-        @media (max-width: 900px) {
-            .container { padding: 10px; }
+
+        /* Bank info row */
+        .bank-info-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
         }
-        @media (max-width: 600px) {
-            .container { padding: 2px; }
-            h2 { font-size: 1.2rem; }
+
+        .bank-info-row .bi-logo {
+            font-size: 1.6rem;
+        }
+
+        .bank-info-row .bi-text {
+            line-height: 1.3;
+        }
+
+        .bank-info-row .bi-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .bank-info-row .bi-acc {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        @media (max-width: 400px) {
+            .bank-tab {
+                min-width: 60px;
+                padding: 8px 4px;
+            }
+
+            .bank-tab .bank-logo {
+                font-size: 1.15rem;
+            }
+
+            .bank-tab .bank-name {
+                font-size: 0.65rem;
+            }
+
+            .qr-frame img {
+                width: 180px;
+                height: 180px;
+            }
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <h2>HỆ THỐNG TẠO MÃ THANH TOÁN QR</h2>
-    <form id="qr-form">
-        <div id="personal-form" style="margin-top:10px;">
-            <div class="form-row">
-                <label>Số tiền:</label>
-                <input type="number" name="amount" min="1000">
+    <div class="app">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>QR Thanh Toán</h1>
+            <p>Lê Chính Đại &mdash; Chọn ngân hàng &amp; tạo mã QR nhanh</p>
+        </div>
+
+        <!-- Bank selector -->
+        <div class="bank-tabs" id="bankTabs">
+            <div class="bank-tab active" data-bank="MB">
+                <span class="bank-logo">🏦</span>
+                <span class="bank-name">MB Bank</span>
             </div>
-            <div class="form-row">
-                <label>Nội dung:</label>
-                <input type="text" name="info" placeholder="Không bắt buộc">
+            <div class="bank-tab" data-bank="VCB">
+                <span class="bank-logo">🟢</span>
+                <span class="bank-name">Vietcombank</span>
+            </div>
+            <div class="bank-tab" data-bank="ICB">
+                <span class="bank-logo">🟠</span>
+                <span class="bank-name">Vietinbank</span>
+            </div>
+            <div class="bank-tab" data-bank="ACB">
+                <span class="bank-logo">🔷</span>
+                <span class="bank-name">ACB</span>
+            </div>
+            <div class="bank-tab" data-bank="TCB">
+                <span class="bank-logo">🔴</span>
+                <span class="bank-name">Techcombank</span>
+            </div>
+            <div class="bank-tab" data-bank="momo">
+                <span class="bank-logo">💜</span>
+                <span class="bank-name">Ví MoMo</span>
             </div>
         </div>
-        <button type="submit">Generate</button>
-        <button type="button" id="qr-no-amount" style="margin-left:18px;background:#e5e7eb;color:#093d62;">Hiện QR không số tiền</button>
-    </form>
-    <div class="error" id="error-message"></div>
-    <div class="qr-img" id="qr-img">
-        <img id="qr-code" src="" alt="QR Code">
+
+        <!-- Mode toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" id="btnModeAmount">Có số tiền</button>
+            <button class="mode-btn" id="btnModeNoAmount">Không số tiền</button>
+        </div>
+
+        <!-- Card: with amount -->
+        <div class="card" id="cardAmount">
+            <div class="bank-info-row" id="bankInfoRow"></div>
+            <div class="form-group">
+                <label>Số tiền (VND)</label>
+                <div class="input-wrap">
+                    <span class="prefix">₫</span>
+                    <input type="number" id="amountInput" min="1000" step="1000" placeholder="Ví dụ: 500000">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Nội dung chuyển khoản</label>
+                <div class="input-wrap">
+                    <input type="text" id="infoInput" class="no-prefix" placeholder="Tuỳ chọn – VD: thanh toan thang 2">
+                </div>
+            </div>
+            <button class="btn-generate" id="btnGenerate">Tạo mã QR</button>
+            <div class="error-msg" id="errorMsg">Vui lòng nhập số tiền (tối thiểu 1.000đ).</div>
+        </div>
+
+        <!-- Card: no amount -->
+        <div class="card" id="cardNoAmount" style="display:none;">
+            <div class="bank-info-row" id="bankInfoRowNA"></div>
+            <div class="no-amount-info">
+                <p>QR không cố định số tiền – người trả tự nhập khi quét</p>
+                <button class="btn-generate" id="btnShowNoAmount">Hiển thị QR</button>
+            </div>
+        </div>
+
+        <!-- QR Result -->
+        <div class="qr-result" id="qrResult">
+            <div class="qr-card">
+                <div class="qr-bank-badge" id="qrBankBadge"></div>
+                <div class="qr-frame">
+                    <img id="qrImg" src="" alt="QR Code">
+                </div>
+                <div class="qr-info" id="qrInfo"></div>
+            </div>
+        </div>
+
     </div>
-    <div class="qr-img" id="qr-img-no-amount" style="display:none;">
-        <img id="qr-code-no-amount" src="https://img.vietqr.io/image/ICB-0342751185-qr_only.png?accountName=LE%20CHINH%20DAI" alt="QR Không số tiền">
-        <div style="margin-top:8px;font-size:0.98rem;color:#666;">QR không có số tiền</div>
-    </div>
-</div>
-<script>
-    document.getElementById('qr-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const amount = document.querySelector('input[name="amount"]').value.trim();
-        const info = document.querySelector('input[name="info"]').value.trim();
-        const errorDiv = document.getElementById('error-message');
-        const qrImgDiv = document.getElementById('qr-img');
-        const qrCodeImg = document.getElementById('qr-code');
-        const qrImgNoAmountDiv = document.getElementById('qr-img-no-amount');
 
-        errorDiv.style.display = 'none';
-        errorDiv.innerHTML = '';
-        qrImgDiv.style.display = 'none';
-        qrCodeImg.src = '';
-        qrImgNoAmountDiv.style.display = 'none';
+    <script>
+        const BANKS = {
+            MB: { name: 'MB Bank', account: '0342751185', logo: '🏦', color: '#38bdf8' },
+            VCB: { name: 'Vietcombank', account: '9342751185', logo: '🟢', color: '#22c55e' },
+            ICB: { name: 'Vietinbank', account: '0342751185', logo: '🟠', color: '#f97316' },
+            ACB: { name: 'ACB', account: '22791751', logo: '🔷', color: '#3b82f6' },
+            TCB: { name: 'Techcombank', account: '19074133178011', logo: '🔴', color: '#ef4444' },
+            momo: { name: 'Ví MoMo', account: '0342751185', logo: '💜', color: '#a855f7' },
+        };
 
-        if (!amount) {
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = 'Vui lòng nhập Số tiền.';
-            return;
+        let currentBank = 'MB';
+        let currentMode = 'amount'; // 'amount' | 'noAmount'
+
+        function fmt(n) {
+            return Number(n).toLocaleString('vi-VN') + 'đ';
         }
 
-        let qrUrl = `https://img.vietqr.io/image/ICB-0342751185-qr_only.png?amount=${amount}`;
-        if (info) {
-            qrUrl += `&addInfo=${encodeURIComponent(info)}`;
+        function buildBankInfoHTML(bankKey) {
+            const b = BANKS[bankKey];
+            return `
+      <span class="bi-logo">${b.logo}</span>
+      <div class="bi-text">
+        <div class="bi-name">${b.name}</div>
+        <div class="bi-acc">STK: <strong>${b.account}</strong></div>
+      </div>`;
         }
-        qrUrl += `&accountName=LE%20CHINH%20DAI`;
 
-        qrCodeImg.src = qrUrl;
-        qrImgDiv.style.display = 'block';
-    });
-
-    const qrNoAmountBtn = document.getElementById('qr-no-amount');
-    const qrImgNoAmountDiv = document.getElementById('qr-img-no-amount');
-
-    qrNoAmountBtn.addEventListener('click', function() {
-        // Ẩn lỗi và QR có số tiền
-        document.getElementById('error-message').style.display = 'none';
-        document.getElementById('qr-img').style.display = 'none';
-        // Toggle QR không số tiền
-        if (qrImgNoAmountDiv.style.display === 'block') {
-            qrImgNoAmountDiv.style.display = 'none';
-            qrNoAmountBtn.textContent = 'Hiện QR không số tiền';
-        } else {
-            qrImgNoAmountDiv.style.display = 'block';
-            qrNoAmountBtn.textContent = 'Ẩn QR không số tiền';
+        function updateBankInfo() {
+            document.getElementById('bankInfoRow').innerHTML = buildBankInfoHTML(currentBank);
+            document.getElementById('bankInfoRowNA').innerHTML = buildBankInfoHTML(currentBank);
         }
-    });
-</script>
+
+        function hideQR() {
+            const r = document.getElementById('qrResult');
+            r.classList.remove('visible');
+            document.getElementById('qrImg').src = '';
+        }
+
+        // Bank tab clicks
+        document.getElementById('bankTabs').addEventListener('click', function (e) {
+            const tab = e.target.closest('.bank-tab');
+            if (!tab) return;
+            document.querySelectorAll('.bank-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentBank = tab.dataset.bank;
+            updateBankInfo();
+            hideQR();
+        });
+
+        // Mode toggle
+        document.getElementById('btnModeAmount').addEventListener('click', function () {
+            currentMode = 'amount';
+            this.classList.add('active');
+            document.getElementById('btnModeNoAmount').classList.remove('active');
+            document.getElementById('cardAmount').style.display = 'block';
+            document.getElementById('cardNoAmount').style.display = 'none';
+            hideQR();
+        });
+        document.getElementById('btnModeNoAmount').addEventListener('click', function () {
+            currentMode = 'noAmount';
+            this.classList.add('active');
+            document.getElementById('btnModeAmount').classList.remove('active');
+            document.getElementById('cardAmount').style.display = 'none';
+            document.getElementById('cardNoAmount').style.display = 'block';
+            hideQR();
+        });
+
+        // Generate with amount
+        document.getElementById('btnGenerate').addEventListener('click', function () {
+            const amount = document.getElementById('amountInput').value.trim();
+            const info = document.getElementById('infoInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            errorMsg.classList.remove('visible');
+
+            if (!amount || Number(amount) < 1000) {
+                errorMsg.classList.add('visible');
+                return;
+            }
+
+            const b = BANKS[currentBank];
+            let url = `https://img.vietqr.io/image/${currentBank}-${b.account}-qr_only.png?amount=${amount}`;
+            if (info) url += `&addInfo=${encodeURIComponent(info)}`;
+            url += `&accountName=LE%20CHINH%20DAI`;
+
+            showQR(url, currentBank, amount, info);
+        });
+
+        // Show no-amount QR
+        document.getElementById('btnShowNoAmount').addEventListener('click', function () {
+            const b = BANKS[currentBank];
+            const url = `https://img.vietqr.io/image/${currentBank}-${b.account}-qr_only.png?accountName=LE%20CHINH%20DAI`;
+            showQR(url, currentBank, null, null);
+        });
+
+        function showQR(url, bankKey, amount, info) {
+            const b = BANKS[bankKey];
+            const badge = document.getElementById('qrBankBadge');
+            badge.innerHTML = `<span>${b.logo}</span> ${b.name}`;
+            badge.style.color = b.color;
+
+            const img = document.getElementById('qrImg');
+            img.src = '';
+            img.src = url;
+
+            const infoDiv = document.getElementById('qrInfo');
+            if (amount) {
+                infoDiv.innerHTML = `
+        <div class="amount-label">${fmt(amount)}</div>
+        ${info ? `<div class="desc-label">${info}</div>` : ''}`;
+            } else {
+                infoDiv.innerHTML = `<div class="no-amount-label">Quét để nhập số tiền tuỳ ý</div>`;
+            }
+
+            document.getElementById('qrResult').classList.add('visible');
+            setTimeout(() => {
+                document.getElementById('qrResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        // Init
+        updateBankInfo();
+    </script>
 </body>
+
 </html>
