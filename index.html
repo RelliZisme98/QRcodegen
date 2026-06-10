@@ -17,16 +17,17 @@
         }
 
         :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface2: #273348;
-            --border: #334155;
+            --bg: #0b0f19;
+            --surface: rgba(30, 41, 59, 0.45);
+            --surface2: rgba(39, 51, 72, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
             --accent: #38bdf8;
             --accent2: #0ea5e9;
             --text: #e2e8f0;
             --muted: #94a3b8;
             --success: #22d3ee;
-            --radius: 16px;
+            --radius: 20px;
+            --bank-color-rgb: 56, 189, 248;
         }
 
         body {
@@ -38,11 +39,28 @@
             align-items: flex-start;
             justify-content: center;
             padding: 32px 12px 48px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(var(--bank-color-rgb), 0.15) 0%, rgba(11, 15, 25, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .app {
             width: 100%;
             max-width: 560px;
+            z-index: 1;
         }
 
         /* Header */
@@ -52,14 +70,15 @@
         }
 
         .header h1 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            background: linear-gradient(90deg, rgba(var(--bank-color-rgb), 1), #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
             line-height: 1.2;
+            transition: background 0.6s ease;
         }
 
         .header p {
@@ -78,51 +97,60 @@
 
         .bank-tab {
             background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 8px 9px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 8px 11px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
 
         .bank-tab:hover {
-            border-color: var(--accent);
-            background: var(--surface2);
+            border-color: rgba(var(--bank-color-rgb), 0.4);
+            background: rgba(var(--bank-color-rgb), 0.04);
             transform: translateY(-2px);
         }
 
         .bank-tab.active {
-            border-color: var(--accent);
-            background: linear-gradient(135deg, #0c1d2e, #162840);
-            box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(56, 189, 248, 0.15);
+            border-color: rgba(var(--bank-color-rgb), 0.8);
+            background: rgba(var(--bank-color-rgb), 0.08);
+            box-shadow: 0 0 0 1px rgba(var(--bank-color-rgb), 0.3), 0 8px 20px rgba(var(--bank-color-rgb), 0.15);
         }
 
         .bank-tab .bank-logo {
-            font-size: 1.35rem;
+            font-size: 1.45rem;
             line-height: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .bank-tab:hover .bank-logo {
+            transform: scale(1.1);
         }
 
         .bank-tab .bank-name {
             font-size: 0.75rem;
             font-weight: 700;
             color: var(--muted);
-            letter-spacing: 0;
+            transition: color 0.3s ease;
         }
 
         .bank-tab.active .bank-name {
-            color: var(--accent);
+            color: rgba(var(--bank-color-rgb), 1);
         }
 
         /* Mode toggle */
         .mode-toggle {
             display: flex;
             background: var(--surface);
-            border-radius: 12px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 14px;
             padding: 4px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
@@ -137,39 +165,49 @@
             font-family: inherit;
             font-size: 0.88rem;
             font-weight: 600;
-            border-radius: 9px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .mode-btn.active {
-            background: var(--accent2);
+            background: rgba(var(--bank-color-rgb), 1);
             color: #fff;
-            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.35);
+            box-shadow: 0 4px 15px rgba(var(--bank-color-rgb), 0.3);
         }
 
         /* Card */
         .card {
             background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 16px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.25s ease, transform 0.25s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .card.glow-active {
+            border-color: rgba(var(--bank-color-rgb), 0.25);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 
+                        0 0 24px 2px rgba(var(--bank-color-rgb), 0.12);
         }
 
         /* Form */
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 700;
             color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin-bottom: 7px;
+            margin-bottom: 8px;
         }
 
         .input-wrap {
@@ -188,14 +226,14 @@
 
         .form-group input {
             width: 100%;
-            background: var(--bg);
+            background: rgba(15, 23, 42, 0.4);
             border: 1.5px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 14px 12px 36px;
+            border-radius: 12px;
+            padding: 13px 14px 13px 36px;
             font-family: inherit;
             font-size: 1rem;
             color: var(--text);
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
         .form-group input.no-prefix {
@@ -204,7 +242,9 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: rgba(var(--bank-color-rgb), 1);
+            background: rgba(15, 23, 42, 0.6);
+            box-shadow: 0 0 0 3px rgba(var(--bank-color-rgb), 0.15);
         }
 
         .form-group input::placeholder {
@@ -214,23 +254,24 @@
         /* Generate button */
         .btn-generate {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(90deg, #0ea5e9, #6366f1);
+            padding: 15px;
+            background: linear-gradient(90deg, rgba(var(--bank-color-rgb), 1), #6366f1);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-family: inherit;
             font-size: 1rem;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
             letter-spacing: 0.3px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(var(--bank-color-rgb), 0.25);
         }
 
         .btn-generate:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(14, 165, 233, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(var(--bank-color-rgb), 0.4);
+            filter: brightness(1.1);
         }
 
         .btn-generate:active {
@@ -241,17 +282,26 @@
         .qr-result {
             display: none;
             text-align: center;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .qr-result.visible {
-            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .qr-card {
             background: var(--surface);
-            border: 1px solid var(--border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(var(--bank-color-rgb), 0.25);
             border-radius: var(--radius);
             padding: 28px 24px 20px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 
+                        0 0 24px 2px rgba(var(--bank-color-rgb), 0.12);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
         .qr-bank-badge {
@@ -261,27 +311,28 @@
             background: var(--surface2);
             border: 1px solid var(--border);
             border-radius: 50px;
-            padding: 5px 14px 5px 10px;
+            padding: 6px 16px 6px 12px;
             margin-bottom: 18px;
             font-size: 0.82rem;
             font-weight: 700;
-            color: var(--accent);
+            color: rgba(var(--bank-color-rgb), 1);
             letter-spacing: 0.5px;
+            transition: color 0.4s ease;
         }
 
         .qr-frame {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 16px;
             display: inline-block;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         .qr-frame img {
             display: block;
             width: 220px;
             height: 220px;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .qr-info {
@@ -289,7 +340,7 @@
         }
 
         .qr-info .amount-label {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--success);
         }
@@ -304,6 +355,92 @@
             font-size: 0.85rem;
             color: var(--muted);
             margin-top: 12px;
+        }
+
+        /* Action buttons for QR */
+        .qr-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .qr-actions .btn-secondary {
+            grid-column: span 2;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(var(--bank-color-rgb), 1), rgba(var(--bank-color-rgb), 0.85));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(var(--bank-color-rgb), 0.25);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(var(--bank-color-rgb), 0.4);
+            filter: brightness(1.08);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn.btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: none;
+        }
+
+        .action-btn.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(var(--bank-color-rgb), 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(var(--bank-color-rgb), 0.5);
+            border-radius: 30px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 16px rgba(var(--bank-color-rgb), 0.25);
+            z-index: 1000;
+            transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .toast.visible {
+            bottom: 24px;
+        }
+
+        .toast .toast-icon {
+            font-size: 1.1rem;
         }
 
         /* No-amount tab content */
@@ -340,10 +477,11 @@
             align-items: center;
             gap: 12px;
             background: var(--surface2);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 12px 16px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
+            transition: all 0.3s ease;
         }
 
         .bank-info-row .bi-logo {
@@ -426,8 +564,8 @@
         }
 
         .history-chip:hover {
-            border-color: var(--accent);
-            background: #162840;
+            border-color: rgba(var(--bank-color-rgb), 1);
+            background: rgba(var(--bank-color-rgb), 0.05);
         }
 
         .history-chip .hc-amount {
@@ -515,7 +653,7 @@
         </div>
 
         <!-- Card: with amount -->
-        <div class="card" id="cardAmount">
+        <div class="card glow-active" id="cardAmount">
             <div class="bank-info-row" id="bankInfoRow"></div>
             <div class="form-group">
                 <label>Số tiền (VND)</label>
@@ -532,7 +670,7 @@
             </div>
             <button class="btn-generate" id="btnGenerate">Tạo mã QR</button>
             <div class="error-msg" id="errorMsg">Vui lòng nhập số tiền (tối thiểu 1.000đ).</div>
-
+ 
             <!-- History -->
             <div class="history-section" id="historySection">
                 <div class="history-header">
@@ -542,16 +680,16 @@
                 <div class="history-chips" id="historyChips"></div>
             </div>
         </div>
-
+ 
         <!-- Card: no amount -->
-        <div class="card" id="cardNoAmount" style="display:none;">
+        <div class="card glow-active" id="cardNoAmount" style="display:none; opacity: 0; transform: translateY(8px);">
             <div class="bank-info-row" id="bankInfoRowNA"></div>
             <div class="no-amount-info">
                 <p>QR không cố định số tiền – người trả tự nhập khi quét</p>
                 <button class="btn-generate" id="btnShowNoAmount">Hiển thị QR</button>
             </div>
         </div>
-
+ 
         <!-- QR Result -->
         <div class="qr-result" id="qrResult">
             <div class="qr-card">
@@ -560,9 +698,26 @@
                     <img id="qrImg" src="" alt="QR Code">
                 </div>
                 <div class="qr-info" id="qrInfo"></div>
+                <div class="qr-actions">
+                    <button class="action-btn" id="btnCopyQR">
+                        <span class="btn-icon">📋</span> Sao chép ảnh QR
+                    </button>
+                    <button class="action-btn" id="btnDownloadQR">
+                        <span class="btn-icon">💾</span> Tải ảnh xuống
+                    </button>
+                    <button class="action-btn btn-secondary" id="btnCopyText">
+                        <span class="btn-icon">📝</span> Copy thông tin CK
+                    </button>
+                </div>
             </div>
         </div>
-
+ 
+    </div>
+ 
+    <!-- Toast element -->
+    <div id="toast" class="toast">
+        <span class="toast-icon" id="toastIcon">✨</span>
+        <span id="toastMsg">Thông báo</span>
     </div>
 
     <script>
@@ -579,6 +734,15 @@
         let currentBank = 'MB';
         let currentMode = 'amount'; // 'amount' | 'noAmount'
 
+        function hexToRgb(hex) {
+            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+                return r + r + g + g + b + b;
+            });
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '56, 189, 248';
+        }
+
         function fmt(n) {
             return Number(n).toLocaleString('vi-VN') + 'đ';
         }
@@ -594,14 +758,38 @@
         }
 
         function updateBankInfo() {
+            const b = BANKS[currentBank];
+            document.documentElement.style.setProperty('--bank-color-rgb', hexToRgb(b.color));
             document.getElementById('bankInfoRow').innerHTML = buildBankInfoHTML(currentBank);
             document.getElementById('bankInfoRowNA').innerHTML = buildBankInfoHTML(currentBank);
+        }
+
+        let toastTimeout;
+        function showToast(msg, icon = '✨') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMsg.textContent = msg;
+            toastIcon.textContent = icon;
+            
+            clearTimeout(toastTimeout);
+            toast.classList.add('visible');
+            
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
         }
 
         function hideQR() {
             const r = document.getElementById('qrResult');
             r.classList.remove('visible');
-            document.getElementById('qrImg').src = '';
+            setTimeout(() => {
+                if (!r.classList.contains('visible')) {
+                    r.style.display = 'none';
+                    document.getElementById('qrImg').src = '';
+                }
+            }, 300);
         }
 
         // Bank tab clicks
@@ -615,23 +803,44 @@
             hideQR();
         });
 
-        // Mode toggle
-        document.getElementById('btnModeAmount').addEventListener('click', function () {
-            currentMode = 'amount';
-            this.classList.add('active');
-            document.getElementById('btnModeNoAmount').classList.remove('active');
-            document.getElementById('cardAmount').style.display = 'block';
-            document.getElementById('cardNoAmount').style.display = 'none';
+        // Mode switching with smooth transition
+        function switchMode(mode) {
+            if (currentMode === mode) return;
+            
+            const cardAmount = document.getElementById('cardAmount');
+            const cardNoAmount = document.getElementById('cardNoAmount');
+            const btnAmount = document.getElementById('btnModeAmount');
+            const btnNoAmount = document.getElementById('btnModeNoAmount');
+            
+            const activeCard = currentMode === 'amount' ? cardAmount : cardNoAmount;
+            const targetCard = mode === 'amount' ? cardAmount : cardNoAmount;
+            
+            currentMode = mode;
             hideQR();
-        });
-        document.getElementById('btnModeNoAmount').addEventListener('click', function () {
-            currentMode = 'noAmount';
-            this.classList.add('active');
-            document.getElementById('btnModeAmount').classList.remove('active');
-            document.getElementById('cardAmount').style.display = 'none';
-            document.getElementById('cardNoAmount').style.display = 'block';
-            hideQR();
-        });
+            
+            if (mode === 'amount') {
+                btnAmount.classList.add('active');
+                btnNoAmount.classList.remove('active');
+            } else {
+                btnNoAmount.classList.add('active');
+                btnAmount.classList.remove('active');
+            }
+            
+            activeCard.style.opacity = '0';
+            activeCard.style.transform = 'translateY(8px)';
+            
+            setTimeout(() => {
+                activeCard.style.display = 'none';
+                targetCard.style.display = 'block';
+                // Force layout reflow
+                targetCard.offsetHeight;
+                targetCard.style.opacity = '1';
+                targetCard.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        document.getElementById('btnModeAmount').addEventListener('click', () => switchMode('amount'));
+        document.getElementById('btnModeNoAmount').addEventListener('click', () => switchMode('noAmount'));
 
         // ── History (localStorage) ──────────────────────────────────────
         const HISTORY_KEY = 'qr_history';
@@ -735,11 +944,143 @@
                 infoDiv.innerHTML = `<div class="no-amount-label">Quét để nhập số tiền tuỳ ý</div>`;
             }
 
-            document.getElementById('qrResult').classList.add('visible');
+            const r = document.getElementById('qrResult');
+            r.style.display = 'block';
+            // force reflow
+            r.offsetHeight;
+            r.classList.add('visible');
+            
             setTimeout(() => {
-                document.getElementById('qrResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 100);
         }
+
+        // Copy QR Image to Clipboard
+        async function copyQRImage() {
+            const img = document.getElementById('qrImg');
+            if (!img.src) return;
+            
+            const btn = document.getElementById('btnCopyQR');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '⌛ Đang copy...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch(img.src);
+                if (!res.ok) throw new Error("Fetch failed");
+                const blob = await res.blob();
+                
+                await navigator.clipboard.write([
+                    new ClipboardItem({ [blob.type]: blob })
+                ]);
+                showToast("Đã sao chép ảnh QR vào clipboard!", "📋");
+            } catch (err) {
+                console.error("Direct copy failed, trying canvas method...", err);
+                try {
+                    const tempImg = new Image();
+                    tempImg.crossOrigin = "anonymous";
+                    tempImg.src = img.src;
+                    tempImg.onload = async () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = tempImg.naturalWidth;
+                        canvas.height = tempImg.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(tempImg, 0, 0);
+                        canvas.toBlob(async (blob) => {
+                            try {
+                                await navigator.clipboard.write([
+                                    new ClipboardItem({ [blob.type]: blob })
+                                ]);
+                                showToast("Đã sao chép ảnh QR vào clipboard!", "📋");
+                            } catch (e) {
+                                console.error(e);
+                                showToast("Không hỗ trợ copy tự động. Hãy bấm giữ ảnh để sao chép.", "⚠️");
+                            }
+                        }, 'image/png');
+                    };
+                    tempImg.onerror = () => {
+                        showToast("Không thể tải ảnh để sao chép.", "⚠️");
+                    };
+                } catch (canvasErr) {
+                    console.error(canvasErr);
+                    showToast("Lỗi sao chép ảnh QR.", "⚠️");
+                }
+            } finally {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+
+        // Download QR Image
+        async function downloadQRImage() {
+            const img = document.getElementById('qrImg');
+            if (!img.src) return;
+            
+            const btn = document.getElementById('btnDownloadQR');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '⌛ Đang tải...';
+            btn.disabled = true;
+            
+            try {
+                const res = await fetch(img.src);
+                if (!res.ok) throw new Error("Fetch failed");
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                
+                const amount = document.getElementById('amountInput').value.trim();
+                const info = document.getElementById('infoInput').value.trim();
+                let filename = `vietqr_${currentBank}`;
+                if (currentMode === 'amount' && amount) {
+                    filename += `_${amount}`;
+                }
+                if (info) {
+                    filename += `_${info.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                }
+                a.download = `${filename}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                showToast("Đã tải ảnh QR thành công!", "💾");
+            } catch (err) {
+                console.error("Download failed, opening image in new tab", err);
+                window.open(img.src, '_blank');
+            } finally {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+
+        // Copy transfer text details
+        function copyTransferText() {
+            const b = BANKS[currentBank];
+            const amount = document.getElementById('amountInput').value.trim();
+            const info = document.getElementById('infoInput').value.trim();
+            
+            let text = `Thông tin chuyển khoản:\n----------------------\n🏦 Ngân hàng: ${b.name}\n🔑 Số tài khoản (STK): ${b.account}\n👤 Chủ tài khoản: LE CHINH DAI`;
+            
+            if (currentMode === 'amount' && amount) {
+                text += `\n💵 Số tiền: ${fmt(amount)}`;
+            }
+            if (currentMode === 'amount' && info) {
+                text += `\n📝 Nội dung CK: ${info}`;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Đã copy thông tin chuyển khoản!", "📝");
+            }).catch(err => {
+                console.error(err);
+                showToast("Lỗi khi sao chép thông tin!", "⚠️");
+            });
+        }
+
+        // Event listeners for actions
+        document.getElementById('btnCopyQR').addEventListener('click', copyQRImage);
+        document.getElementById('btnDownloadQR').addEventListener('click', downloadQRImage);
+        document.getElementById('btnCopyText').addEventListener('click', copyTransferText);
 
         // Init
         updateBankInfo();
