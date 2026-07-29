@@ -366,7 +366,7 @@
         }
 
         .qr-actions .btn-secondary {
-            grid-column: span 2;
+            /* no grid-column span so it flows in 2x2 grid */
         }
 
         .action-btn {
@@ -602,6 +602,218 @@
                 height: 180px;
             }
         }
+
+        /* Quick Amounts style */
+        .quick-amounts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .quick-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            padding: 6px 10px;
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            background: rgba(var(--bank-color-rgb), 0.08);
+            border-color: rgba(var(--bank-color-rgb), 0.4);
+            color: var(--accent);
+        }
+
+        .quick-btn:active {
+            transform: translateY(1px);
+        }
+
+        .quick-btn.clear-btn {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .quick-btn.clear-btn:hover {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(11, 15, 25, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        
+        .modal.visible {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 460px;
+            padding: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+            transform: scale(0.9) translateY(10px);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .modal.visible .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: #fff;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        /* Standee Modal specific style */
+        .standee-modal-content {
+            max-width: 720px;
+            width: 95%;
+        }
+        
+        .standee-modal-body {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+        
+        @media (max-width: 640px) {
+            .standee-modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .standee-preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            overflow: hidden;
+        }
+        
+        #standeePreviewCanvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 2/3;
+        }
+        
+        .standee-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .theme-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        
+        .theme-option {
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 8px;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+        }
+        
+        .theme-option:hover {
+            border-color: rgba(var(--bank-color-rgb), 0.4);
+            background: rgba(var(--bank-color-rgb), 0.03);
+            color: var(--text);
+        }
+        
+        .theme-option.active {
+            border-color: rgba(var(--bank-color-rgb), 1);
+            background: rgba(var(--bank-color-rgb), 0.08);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(var(--bank-color-rgb), 0.15);
+        }
+        
+        .theme-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: block;
+        }
     </style>
 </head>
 
@@ -661,6 +873,15 @@
                     <span class="prefix">₫</span>
                     <input type="number" id="amountInput" min="1000" step="1000" placeholder="Ví dụ: 500000">
                 </div>
+                <div class="quick-amounts" id="quickAmounts">
+                    <button class="quick-btn" data-value="10000">+10k</button>
+                    <button class="quick-btn" data-value="20000">+20k</button>
+                    <button class="quick-btn" data-value="50000">+50k</button>
+                    <button class="quick-btn" data-value="100000">+100k</button>
+                    <button class="quick-btn" data-value="200000">+200k</button>
+                    <button class="quick-btn" data-value="500000">+500k</button>
+                    <button class="quick-btn clear-btn" id="btnResetAmount">Xoá</button>
+                </div>
             </div>
             <div class="form-group">
                 <label>Nội dung chuyển khoản</label>
@@ -695,7 +916,7 @@
             <div class="qr-card">
                 <div class="qr-bank-badge" id="qrBankBadge"></div>
                 <div class="qr-frame">
-                    <img id="qrImg" src="" alt="QR Code">
+                    <img id="qrImg" src="" alt="QR Code" crossorigin="anonymous">
                 </div>
                 <div class="qr-info" id="qrInfo"></div>
                 <div class="qr-actions">
@@ -708,6 +929,9 @@
                     <button class="action-btn btn-secondary" id="btnCopyText">
                         <span class="btn-icon">📝</span> Copy thông tin CK
                     </button>
+                    <button class="action-btn btn-secondary" id="btnOpenStandee">
+                        <span class="btn-icon">🎴</span> Tạo ảnh Standee
+                    </button>
                 </div>
             </div>
         </div>
@@ -718,6 +942,58 @@
     <div id="toast" class="toast">
         <span class="toast-icon" id="toastIcon">✨</span>
         <span id="toastMsg">Thông báo</span>
+    </div>
+
+    <!-- Standee Modal -->
+    <div id="standeeModal" class="modal">
+        <div class="modal-content standee-modal-content">
+            <div class="modal-header">
+                <h2>Tạo Standee Thanh Toán</h2>
+                <button class="modal-close" id="btnCloseStandee">&times;</button>
+            </div>
+            <div class="modal-body standee-modal-body">
+                <!-- Live Preview of Canvas -->
+                <div class="standee-preview-container">
+                    <canvas id="standeePreviewCanvas" width="400" height="600"></canvas>
+                </div>
+                
+                <!-- Controls -->
+                <div class="standee-controls">
+                    <div class="form-group">
+                        <label>Chọn mẫu thiết kế (Template)</label>
+                        <div class="theme-selector">
+                            <button class="theme-option active" data-theme="minimalist">
+                                <span class="theme-color" style="background: #ffffff; border: 1px solid #ddd;"></span>
+                                Minimalist
+                            </button>
+                            <button class="theme-option" data-theme="cyberpunk">
+                                <span class="theme-color" style="background: linear-gradient(135deg, #0f172a, #3b0764);"></span>
+                                Cyberpunk
+                            </button>
+                            <button class="theme-option" data-theme="luxury">
+                                <span class="theme-color" style="background: linear-gradient(135deg, #020617, #0f172a); border: 1px solid #fbbf24;"></span>
+                                Luxury Gold
+                            </button>
+                            <button class="theme-option" data-theme="pastel">
+                                <span class="theme-color" style="background: linear-gradient(135deg, #f472b6, #38bdf8);"></span>
+                                Pastel Gradient
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Lời chúc / Lời nhắn cuối thẻ</label>
+                        <input type="text" id="standeeFooterText" placeholder="Mặc định: Cảm ơn quý khách!" value="Cảm ơn quý khách!">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn btn-secondary" id="btnCancelStandee">Huỷ</button>
+                <button class="action-btn" id="btnDownloadStandee">
+                    <span class="btn-icon">💾</span> Tải Standee (PNG)
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1081,6 +1357,307 @@
         document.getElementById('btnCopyQR').addEventListener('click', copyQRImage);
         document.getElementById('btnDownloadQR').addEventListener('click', downloadQRImage);
         document.getElementById('btnCopyText').addEventListener('click', copyTransferText);
+
+        // ── Quick Amounts Logic ──────────────────────────────────────────────
+        document.getElementById('quickAmounts').addEventListener('click', function (e) {
+            const btn = e.target.closest('.quick-btn');
+            if (!btn) return;
+            
+            const input = document.getElementById('amountInput');
+            if (btn.id === 'btnResetAmount') {
+                input.value = '';
+            } else {
+                const addVal = parseInt(btn.dataset.value, 10);
+                const currentVal = parseInt(input.value, 10) || 0;
+                input.value = currentVal + addVal;
+            }
+            
+            document.getElementById('errorMsg').classList.remove('visible');
+        });
+
+        // ── Standee Generator Canvas Logic ────────────────────────────────────
+        const standeeModal = document.getElementById('standeeModal');
+        const standeeCanvas = document.getElementById('standeePreviewCanvas');
+        const footerInput = document.getElementById('standeeFooterText');
+        
+        let activeStandeeTheme = 'minimalist';
+        
+        function openStandeeModal() {
+            const qrImg = document.getElementById('qrImg');
+            if (!qrImg || !qrImg.src) {
+                showToast("Vui lòng tạo mã QR trước!", "⚠️");
+                return;
+            }
+            
+            standeeModal.classList.add('visible');
+            refreshStandeePreview();
+        }
+        
+        function closeStandeeModal() {
+            standeeModal.classList.remove('visible');
+        }
+        
+        function refreshStandeePreview() {
+            const text = footerInput.value.trim() || 'Cảm ơn quý khách!';
+            drawStandee(standeeCanvas, activeStandeeTheme, text, 1);
+        }
+        
+        document.getElementById('btnOpenStandee').addEventListener('click', openStandeeModal);
+        document.getElementById('btnCloseStandee').addEventListener('click', closeStandeeModal);
+        document.getElementById('btnCancelStandee').addEventListener('click', closeStandeeModal);
+        
+        document.querySelectorAll('.theme-option').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                activeStandeeTheme = this.dataset.theme;
+                refreshStandeePreview();
+            });
+        });
+        
+        footerInput.addEventListener('input', refreshStandeePreview);
+        
+        function drawStandee(canvas, theme, textFooter, scale = 1) {
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // 1. Draw Background
+            if (theme === 'minimalist') {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, w, h);
+                
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 10 * scale;
+                ctx.strokeRect(5 * scale, 5 * scale, w - 10 * scale, h - 10 * scale);
+                
+                ctx.strokeStyle = '#cbd5e1';
+                ctx.lineWidth = 1 * scale;
+                ctx.strokeRect(14 * scale, 14 * scale, w - 28 * scale, h - 28 * scale);
+            } else if (theme === 'cyberpunk') {
+                ctx.fillStyle = '#0b0f19';
+                ctx.fillRect(0, 0, w, h);
+                
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.04)';
+                ctx.lineWidth = 1 * scale;
+                for (let i = 0; i < w; i += 25 * scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, h);
+                    ctx.stroke();
+                }
+                for (let j = 0; j < h; j += 25 * scale) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, j);
+                    ctx.lineTo(w, j);
+                    ctx.stroke();
+                }
+                
+                ctx.strokeStyle = '#ec4899';
+                ctx.lineWidth = 4 * scale;
+                ctx.strokeRect(10 * scale, 10 * scale, w - 20 * scale, h - 20 * scale);
+                
+                ctx.strokeStyle = '#06b6d4';
+                ctx.lineWidth = 1.5 * scale;
+                ctx.strokeRect(14 * scale, 14 * scale, w - 28 * scale, h - 28 * scale);
+            } else if (theme === 'luxury') {
+                ctx.fillStyle = '#020617';
+                ctx.fillRect(0, 0, w, h);
+                
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 6 * scale;
+                ctx.strokeRect(12 * scale, 12 * scale, w - 24 * scale, h - 24 * scale);
+                
+                ctx.strokeStyle = '#fef08a';
+                ctx.lineWidth = 1 * scale;
+                ctx.strokeRect(17 * scale, 17 * scale, w - 34 * scale, h - 34 * scale);
+            } else if (theme === 'pastel') {
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, '#f472b6');
+                grad.addColorStop(0.5, '#c084fc');
+                grad.addColorStop(1, '#38bdf8');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+                
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 8 * scale;
+                ctx.strokeRect(10 * scale, 10 * scale, w - 20 * scale, h - 20 * scale);
+            }
+            
+            // 2. Draw Header
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            if (theme === 'cyberpunk') {
+                ctx.fillStyle = '#06b6d4';
+                ctx.font = `bold ${22 * scale}px 'Be Vietnam Pro', sans-serif`;
+                ctx.fillText('QUÉT MÃ THANH TOÁN', w / 2, 50 * scale);
+                
+                ctx.fillStyle = '#ec4899';
+                ctx.fillRect(w / 2 - 80 * scale, 70 * scale, 160 * scale, 3 * scale);
+            } else if (theme === 'luxury') {
+                ctx.fillStyle = '#fef08a';
+                ctx.font = `bold ${22 * scale}px 'Be Vietnam Pro', sans-serif`;
+                ctx.fillText('QUÉT MÃ THANH TOÁN', w / 2, 50 * scale);
+                
+                ctx.fillStyle = '#d97706';
+                ctx.fillRect(w / 2 - 70 * scale, 70 * scale, 140 * scale, 2 * scale);
+            } else if (theme === 'pastel') {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `bold ${22 * scale}px 'Be Vietnam Pro', sans-serif`;
+                ctx.fillText('QUÉT MÃ THANH TOÁN', w / 2, 50 * scale);
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.fillRect(w / 2 - 60 * scale, 70 * scale, 120 * scale, 2 * scale);
+            } else {
+                ctx.fillStyle = '#0f172a';
+                ctx.font = `bold ${22 * scale}px 'Be Vietnam Pro', sans-serif`;
+                ctx.fillText('QUÉT MÃ THANH TOÁN', w / 2, 50 * scale);
+                
+                ctx.fillStyle = '#e2e8f0';
+                ctx.fillRect(w / 2 - 60 * scale, 70 * scale, 120 * scale, 2 * scale);
+            }
+            
+            // 3. Draw QR Frame & QR Image
+            const qrSize = 220 * scale;
+            const qrX = w / 2 - qrSize / 2;
+            const qrY = 110 * scale;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.roundRect(qrX - 12 * scale, qrY - 12 * scale, qrSize + 24 * scale, qrSize + 24 * scale, 16 * scale);
+            ctx.fill();
+            
+            if (theme === 'cyberpunk') {
+                ctx.strokeStyle = '#ec4899';
+                ctx.lineWidth = 2 * scale;
+                ctx.stroke();
+            } else if (theme === 'luxury') {
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 2 * scale;
+                ctx.stroke();
+            } else if (theme === 'pastel') {
+                ctx.strokeStyle = '#f3e8ff';
+                ctx.lineWidth = 1 * scale;
+                ctx.stroke();
+            } else {
+                ctx.strokeStyle = '#f1f5f9';
+                ctx.lineWidth = 1 * scale;
+                ctx.stroke();
+            }
+            
+            const qrImg = document.getElementById('qrImg');
+            if (qrImg && qrImg.src) {
+                try {
+                    ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+                } catch (e) {
+                    console.error(e);
+                    ctx.fillStyle = '#64748b';
+                    ctx.font = `${14 * scale}px sans-serif`;
+                    ctx.fillText('Không thể tải mã QR', w / 2, qrY + qrSize / 2);
+                }
+            }
+            
+            // 4. Draw Bank Badge & Info
+            const b = BANKS[currentBank];
+            const infoY = 385 * scale;
+            
+            ctx.fillStyle = theme === 'luxury' ? 'rgba(217, 119, 6, 0.15)' : 
+                            theme === 'cyberpunk' ? 'rgba(6, 182, 212, 0.15)' : 
+                            theme === 'pastel' ? 'rgba(255, 255, 255, 0.9)' : '#f1f5f9';
+            
+            const badgeW = 260 * scale;
+            const badgeH = 40 * scale;
+            const badgeX = w / 2 - badgeW / 2;
+            
+            ctx.beginPath();
+            ctx.roundRect(badgeX, infoY, badgeW, badgeH, 20 * scale);
+            ctx.fill();
+            
+            if (theme === 'luxury') {
+                ctx.strokeStyle = 'rgba(217, 119, 6, 0.3)';
+                ctx.lineWidth = 1 * scale;
+                ctx.stroke();
+            } else if (theme === 'cyberpunk') {
+                ctx.strokeStyle = 'rgba(6, 182, 212, 0.3)';
+                ctx.lineWidth = 1 * scale;
+                ctx.stroke();
+            }
+            
+            ctx.font = `${16 * scale}px sans-serif`;
+            ctx.fillText(b.logo, badgeX + 25 * scale, infoY + 20 * scale);
+            
+            ctx.fillStyle = theme === 'luxury' ? '#fef08a' : 
+                            theme === 'cyberpunk' ? '#06b6d4' : '#1e293b';
+            ctx.font = `bold ${14 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.textAlign = 'left';
+            ctx.fillText(b.name, badgeX + 50 * scale, infoY + 20 * scale);
+            
+            // 5. Draw Owner & STK
+            const textStartY = 450 * scale;
+            ctx.textAlign = 'center';
+            
+            ctx.fillStyle = theme === 'luxury' ? '#94a3b8' : 
+                            theme === 'cyberpunk' ? '#94a3b8' : 
+                            theme === 'pastel' ? '#475569' : '#64748b';
+            ctx.font = `bold ${11 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.fillText('CHỦ TÀI KHOẢN', w / 2, textStartY);
+            
+            ctx.fillStyle = theme === 'luxury' ? '#ffffff' : 
+                            theme === 'cyberpunk' ? '#ffffff' : 
+                            theme === 'pastel' ? '#1e293b' : '#0f172a';
+            ctx.font = `bold ${17 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.fillText('LE CHINH DAI', w / 2, textStartY + 24 * scale);
+            
+            ctx.fillStyle = theme === 'luxury' ? '#94a3b8' : 
+                            theme === 'cyberpunk' ? '#94a3b8' : 
+                            theme === 'pastel' ? '#475569' : '#64748b';
+            ctx.font = `bold ${11 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.fillText('SỐ TÀI KHOẢN', w / 2, textStartY + 58 * scale);
+            
+            ctx.fillStyle = theme === 'luxury' ? '#fef08a' : 
+                            theme === 'cyberpunk' ? '#06b6d4' : 
+                            theme === 'pastel' ? '#7c3aed' : 'rgba(var(--bank-color-rgb), 1)';
+            ctx.font = `bold ${20 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.fillText(b.account, w / 2, textStartY + 82 * scale);
+            
+            // 6. Draw Footer text
+            const footerY = 560 * scale;
+            
+            ctx.fillStyle = theme === 'luxury' ? '#d97706' : 
+                            theme === 'cyberpunk' ? '#ec4899' : 
+                            theme === 'pastel' ? '#6b21a8' : '#475569';
+            ctx.font = `italic ${14 * scale}px 'Be Vietnam Pro', sans-serif`;
+            ctx.fillText(textFooter, w / 2, footerY);
+        }
+        
+        document.getElementById('btnDownloadStandee').addEventListener('click', function () {
+            const footerText = footerInput.value.trim() || 'Cảm ơn quý khách!';
+            
+            const hiddenCanvas = document.createElement('canvas');
+            hiddenCanvas.width = 800;
+            hiddenCanvas.height = 1200;
+            
+            drawStandee(hiddenCanvas, activeStandeeTheme, footerText, 2);
+            
+            try {
+                const url = hiddenCanvas.toDataURL("image/png");
+                const a = document.createElement('a');
+                a.href = url;
+                
+                const b = BANKS[currentBank];
+                a.download = `standee_qr_thanh_toan_${b.name}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                showToast("Đã tải ảnh Standee thành công!", "💾");
+            } catch (err) {
+                console.error("Canvas export failed:", err);
+                showToast("Lỗi khi xuất ảnh Standee! Hãy đảm bảo ảnh QR đã tải xong.", "⚠️");
+            }
+        });
 
         // Init
         updateBankInfo();
